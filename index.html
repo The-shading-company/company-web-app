@@ -376,41 +376,7 @@
                 <div class="products-container">
                     <h2>Our Products</h2>
                     
-                    <div class="product-item">
-                        <div class="product-image">🏠</div>
-                        <div class="product-info">
-                            <h3>Premium Awnings</h3>
-                            <p>High-quality retractable awnings for outdoor spaces</p>
-                            <div class="price">$299 - $899</div>
-                        </div>
-                    </div>
-                    
-                    <div class="product-item">
-                        <div class="product-image">☂️</div>
-                        <div class="product-info">
-                            <h3>Commercial Umbrellas</h3>
-                            <p>Durable umbrellas for restaurants and cafes</p>
-                            <div class="price">$149 - $399</div>
-                        </div>
-                    </div>
-                    
-                    <div class="product-item">
-                        <div class="product-image">🏗️</div>
-                        <div class="product-info">
-                            <h3>Custom Pergolas</h3>
-                            <p>Beautiful pergolas for gardens and patios</p>
-                            <div class="price">$599 - $1,999</div>
-                        </div>
-                    </div>
-                    
-                    <div class="product-item">
-                        <div class="product-image">🌿</div>
-                        <div class="product-info">
-                            <h3>Shade Sails</h3>
-                            <p>Modern shade solutions for any outdoor area</p>
-                            <div class="price">$99 - $299</div>
-                        </div>
-                    </div>
+                    <div id="productsList"></div>
                 </div>
             </div>
 
@@ -615,6 +581,51 @@
                 canvas.height = 300;
             }
         });
-    </script>
+        // Dynamic Products Rendering
+        function renderProducts() {
+            const products = [
+                {
+                    emoji: "🏠",
+                    name: "Premium Awnings",
+                    desc: "High-quality retractable awnings for outdoor spaces",
+                    price: "$299 - $899"
+                },
+                {
+                    emoji: "☂️",
+                    name: "Commercial Umbrellas",
+                    desc: "Durable umbrellas for restaurants and cafes",
+                    price: "$149 - $399"
+                },
+                {
+                    emoji: "🏗️",
+                    name: "Custom Pergolas",
+                    desc: "Beautiful pergolas for gardens and patios",
+                    price: "$599 - $1,999"
+                },
+                {
+                    emoji: "🌿",
+                    name: "Shade Sails",
+                    desc: "Modern shade solutions for any outdoor area",
+                    price: "$99 - $299"
+                }
+            ];
+            const container = document.getElementById('productsList');
+            container.innerHTML = products.map(product => `
+                <div class="product-item">
+                    <div class="product-image">${product.emoji}</div>
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p>${product.desc}</p>
+                        <div class="price">${product.price}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize canvas when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initCanvas();
+            renderProducts();
+        });
 </body>
 </html>
