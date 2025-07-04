@@ -569,18 +569,6 @@
             }
         }
 
-        // Initialize canvas and products (DOM is already ready since script is at end of body)
-        initCanvas();
-        renderProducts();
-
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            if (canvas) {
-                const container = canvas.parentElement;
-                canvas.width = container.offsetWidth - 4;
-                canvas.height = 300;
-            }
-        });
         // Dynamic Products Rendering
         function renderProducts() {
             const products = [
@@ -624,6 +612,20 @@
             `).join('');
         }
 
-        // (The DOMContentLoaded handler above initializes both canvas and products)
+        // Ensure tab switching remains functional and unaffected by later changes.
+        // Do not override .nav-item onclick handlers or logo.
+        // Initialize canvas and products at end of script to avoid early execution.
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (canvas) {
+                const container = canvas.parentElement;
+                canvas.width = container.offsetWidth - 4;
+                canvas.height = 300;
+            }
+        });
+
+        // Initialize after all functions are declared
+        initCanvas();
+        renderProducts();
 </body>
 </html>
