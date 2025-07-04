@@ -569,26 +569,10 @@
             }
         }
 
-        // Initialize canvas, products, and attach nav event listeners when page loads
+        // Initialize canvas and products when page loads
         document.addEventListener('DOMContentLoaded', function() {
             initCanvas();
             renderProducts();
-
-            // Explicitly attach event listeners to nav items
-            const navItems = document.querySelectorAll('.bottom-nav .nav-item');
-            const tabIds = ['ar-tab', 'sketch-tab', 'products-tab', 'maps-tab'];
-            navItems.forEach((item, idx) => {
-                // Remove any existing listener by cloning
-                const newItem = item.cloneNode(true);
-                item.parentNode.replaceChild(newItem, item);
-            });
-            // Re-select navItems after cloning
-            const navItemsUpdated = document.querySelectorAll('.bottom-nav .nav-item');
-            navItemsUpdated.forEach((item, idx) => {
-                item.addEventListener('click', function() {
-                    showTab(tabIds[idx], item);
-                });
-            });
         });
 
         // Handle window resize
