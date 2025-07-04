@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: 90px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* AR Tab */
+        .ar-viewer {
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .ar-placeholder {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .ar-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .ar-btn:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+
+        /* Sketch Pad */
+        .sketch-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .sketch-tools {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tool-btn {
+            background: #4ecdc4;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .tool-btn:hover, .tool-btn.active {
+            background: #45b7aa;
+            transform: scale(1.05);
+        }
+
+        .canvas-container {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        #sketchCanvas {
+            display: block;
+            background: white;
+            cursor: crosshair;
+            width: 100%;
+            height: 300px;
+        }
+
+        .measurements {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        /* Products Tab */
+        .products-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .product-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .product-image {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #ff9a9e, #fecfef);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .product-info h3 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .product-info p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .price {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        /* Maps Tab */
+        .maps-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .map-placeholder {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .location-info {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 10px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-around;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            min-width: 60px;
+        }
+
+        .nav-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-item.active {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+        }
+
+        .nav-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .content {
+                padding: 15px;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .nav-label {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <h1>Company Mobile App</h1>
+        </div>
+
+        <div class="content">
+            <!-- AR Tab -->
+            <div class="tab-content active" id="ar-tab">
+                <div class="ar-viewer">
+                    <div class="ar-placeholder">
+                        📱 AR Camera View
+                    </div>
+                    <h2>Augmented Reality Products</h2>
+                    <p>Point your camera to see our products in your space</p>
+                </div>
+                
+                <div class="product-grid">
+                    <div class="product-card">
+                        <h3>🏠 Awnings</h3>
+                        <button class="ar-btn" onclick="showAR('awnings')">View in AR</button>
+                    </div>
+                    <div class="product-card">
+                        <h3>☂️ Umbrellas</h3>
+                        <button class="ar-btn" onclick="showAR('umbrellas')">View in AR</button>
+                    </div>
+                    <div class="product-card">
+                        <h3>🏗️ Pergolas</h3>
+                        <button class="ar-btn" onclick="showAR('pergolas')">View in AR</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sketch Pad Tab -->
+            <div class="tab-content" id="sketch-tab">
+                <div class="sketch-container">
+                    <h2>Measurement Tool</h2>
+                    <div class="sketch-tools">
+                        <button class="tool-btn active" onclick="setTool('draw')">✏️ Draw</button>
+                        <button class="tool-btn" onclick="setTool('measure')">📏 Measure</button>
+                        <button class="tool-btn" onclick="setTool('clear')">🗑️ Clear</button>
+                    </div>
+                    
+                    <div class="canvas-container">
+                        <canvas id="sketchCanvas"></canvas>
+                    </div>
+                    
+                    <div class="measurements">
+                        <h3>Measurements</h3>
+                        <div id="measurementsList">
+                            <p>Click "Measure" and draw lines to get measurements</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Tab -->
+            <div class="tab-content" id="products-tab">
+                <div class="products-container">
+                    <h2>Our Products</h2>
+                    
+                    <div class="product-item">
+                        <div class="product-image">🏠</div>
+                        <div class="product-info">
+                            <h3>Premium Awnings</h3>
+                            <p>High-quality retractable awnings for outdoor spaces</p>
+                            <div class="price">$299 - $899</div>
+                        </div>
+                    </div>
+                    
+                    <div class="product-item">
+                        <div class="product-image">☂️</div>
+                        <div class="product-info">
+                            <h3>Commercial Umbrellas</h3>
+                            <p>Durable umbrellas for restaurants and cafes</p>
+                            <div class="price">$149 - $399</div>
+                        </div>
+                    </div>
+                    
+                    <div class="product-item">
+                        <div class="product-image">🏗️</div>
+                        <div class="product-info">
+                            <h3>Custom Pergolas</h3>
+                            <p>Beautiful pergolas for gardens and patios</p>
+                            <div class="price">$599 - $1,999</div>
+                        </div>
+                    </div>
+                    
+                    <div class="product-item">
+                        <div class="product-image">🌿</div>
+                        <div class="product-info">
+                            <h3>Shade Sails</h3>
+                            <p>Modern shade solutions for any outdoor area</p>
+                            <div class="price">$99 - $299</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Maps Tab -->
+            <div class="tab-content" id="maps-tab">
+                <div class="maps-container">
+                    <h2>Dubai Locations</h2>
+                    <div class="map-placeholder">
+                        🗺️ Interactive Dubai Map
+                    </div>
+                    
+                    <div class="location-info">
+                        <h3>📍 Our Locations in Dubai</h3>
+                        <p><strong>Showroom:</strong> Dubai Mall, Downtown Dubai</p>
+                        <p><strong>Warehouse:</strong> Al Quoz Industrial Area</p>
+                        <p><strong>Service Center:</strong> Business Bay</p>
+                        <p><strong>Installation Hub:</strong> Jumeirah Beach Road</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="showTab('ar-tab', this)">
+                <div class="nav-icon">📱</div>
+                <div class="nav-label">A/R</div>
+            </div>
+            <div class="nav-item" onclick="showTab('sketch-tab', this)">
+                <div class="nav-icon">📏</div>
+                <div class="nav-label">Sketch</div>
+            </div>
+            <div class="nav-item" onclick="showTab('products-tab', this)">
+                <div class="nav-icon">🛍️</div>
+                <div class="nav-label">Products</div>
+            </div>
+            <div class="nav-item" onclick="showTab('maps-tab', this)">
+                <div class="nav-icon">🗺️</div>
+                <div class="nav-label">Maps</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function showTab(tabId, navItem) {
+            // Hide all tab contents
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+            
+            // Update navigation
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            navItem.classList.add('active');
+        }
+
+        // AR functionality
+        function showAR(product) {
+            const placeholder = document.querySelector('.ar-placeholder');
+            placeholder.innerHTML = `📱 Viewing ${product} in AR`;
+            placeholder.style.background = 'linear-gradient(45deg, #ff6b6b, #4ecdc4)';
+            
+            setTimeout(() => {
+                placeholder.innerHTML = '📱 AR Camera View';
+                placeholder.style.background = 'linear-gradient(45deg, #ff6b6b, #4ecdc4)';
+            }, 3000);
+        }
+
+        // Sketch pad functionality
+        let canvas, ctx;
+        let isDrawing = false;
+        let currentTool = 'draw';
+        let startPoint = null;
+        let measurements = [];
+
+        function initCanvas() {
+            canvas = document.getElementById('sketchCanvas');
+            ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            const container = canvas.parentElement;
+            canvas.width = container.offsetWidth - 4;
+            canvas.height = 300;
+            
+            // Event listeners
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+            
+            // Touch events for mobile
+            canvas.addEventListener('touchstart', handleTouch);
+            canvas.addEventListener('touchmove', handleTouch);
+            canvas.addEventListener('touchend', handleTouch);
+        }
+
+        function handleTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            
+            if (e.type === 'touchstart') {
+                startDrawing({offsetX: x, offsetY: y});
+            } else if (e.type === 'touchmove') {
+                draw({offsetX: x, offsetY: y});
+            } else if (e.type === 'touchend') {
+                stopDrawing();
+            }
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            startPoint = {x: e.offsetX, y: e.offsetY};
+            
+            if (currentTool === 'draw') {
+                ctx.beginPath();
+                ctx.moveTo(e.offsetX, e.offsetY);
+            }
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            
+            if (currentTool === 'draw') {
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = '#667eea';
+                ctx.lineTo(e.offsetX, e.offsetY);
+                ctx.stroke();
+            }
+        }
+
+        function stopDrawing(e) {
+            if (!isDrawing) return;
+            isDrawing = false;
+            
+            if (currentTool === 'measure' && startPoint && e) {
+                const endPoint = {x: e.offsetX, y: e.offsetY};
+                const distance = Math.sqrt(
+                    Math.pow(endPoint.x - startPoint.x, 2) + 
+                    Math.pow(endPoint.y - startPoint.y, 2)
+                );
+                
+                // Draw measurement line
+                ctx.beginPath();
+                ctx.moveTo(startPoint.x, startPoint.y);
+                ctx.lineTo(endPoint.x, endPoint.y);
+                ctx.strokeStyle = '#ff6b6b';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                
+                // Add measurement to list
+                const measurementText = `${(distance / 10).toFixed(1)} cm`;
+                measurements.push(measurementText);
+                updateMeasurements();
+            }
+        }
+
+        function setTool(tool) {
+            currentTool = tool;
+            
+            // Update button states
+            document.querySelectorAll('.tool-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            if (tool === 'clear') {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                measurements = [];
+                updateMeasurements();
+                currentTool = 'draw';
+                document.querySelector('.tool-btn').classList.add('active');
+            }
+        }
+
+        function updateMeasurements() {
+            const list = document.getElementById('measurementsList');
+            if (measurements.length === 0) {
+                list.innerHTML = '<p>Click "Measure" and draw lines to get measurements</p>';
+            } else {
+                list.innerHTML = '<h4>Recorded Measurements:</h4>' + 
+                    measurements.map((m, i) => `<p>Line ${i + 1}: ${m}</p>`).join('');
+            }
+        }
+
+        // Initialize canvas when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initCanvas();
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (canvas) {
+                const container = canvas.parentElement;
+                canvas.width = container.offsetWidth - 4;
+                canvas.height = 300;
+            }
+        });
+    </script>
+</body>
+</html>
