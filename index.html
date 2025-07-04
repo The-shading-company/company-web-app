@@ -569,11 +569,9 @@
             }
         }
 
-        // Initialize canvas and products when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            initCanvas();
-            renderProducts();
-        });
+        // Initialize canvas and products (DOM is already ready since script is at end of body)
+        initCanvas();
+        renderProducts();
 
         // Handle window resize
         window.addEventListener('resize', function() {
