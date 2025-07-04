@@ -569,9 +569,10 @@
             }
         }
 
-        // Initialize canvas when page loads
+        // Initialize canvas and products when page loads
         document.addEventListener('DOMContentLoaded', function() {
             initCanvas();
+            renderProducts();
         });
 
         // Handle window resize
@@ -625,10 +626,6 @@
             `).join('');
         }
 
-        // Initialize canvas when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            initCanvas();
-            renderProducts();
-        });
+        // (The DOMContentLoaded handler above initializes both canvas and products)
 </body>
 </html>
