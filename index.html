@@ -318,6 +318,7 @@
 <body>
     <div class="app-container">
         <div class="header">
+            <img src="https://theshadingcompany.ae/wp-content/uploads/2023/03/shading-logo.png" alt="Company Logo" style="max-width:120px; margin-bottom:8px; display:block; margin-left:auto; margin-right:auto;">
             <h1>Company Mobile App</h1>
         </div>
 
@@ -585,25 +586,25 @@
         function renderProducts() {
             const products = [
                 {
-                    emoji: "🏠",
+                    image: "https://theshadingcompany.ae/wp-content/uploads/2023/07/Storbox-s-300-awning-600x450.jpg",
                     name: "Premium Awnings",
                     desc: "High-quality retractable awnings for outdoor spaces",
                     price: "$299 - $899"
                 },
                 {
-                    emoji: "☂️",
+                    image: "https://theshadingcompany.ae/wp-content/uploads/2023/09/Sombrano-Cantilever-umbrella-600x450.jpg",
                     name: "Commercial Umbrellas",
                     desc: "Durable umbrellas for restaurants and cafes",
                     price: "$149 - $399"
                 },
                 {
-                    emoji: "🏗️",
+                    image: "https://theshadingcompany.ae/wp-content/uploads/2024/01/Sierra-Bioclimatic-Pergola-UAE-600x450.jpg",
                     name: "Custom Pergolas",
                     desc: "Beautiful pergolas for gardens and patios",
                     price: "$599 - $1,999"
                 },
                 {
-                    emoji: "🌿",
+                    image: "https://theshadingcompany.ae/wp-content/uploads/2023/06/Shade-Sail-with-2-posts-in-Dubai-Hills.jpeg",
                     name: "Shade Sails",
                     desc: "Modern shade solutions for any outdoor area",
                     price: "$99 - $299"
@@ -612,7 +613,9 @@
             const container = document.getElementById('productsList');
             container.innerHTML = products.map(product => `
                 <div class="product-item">
-                    <div class="product-image">${product.emoji}</div>
+                    <div class="product-image" style="padding:0;">
+                        <img src="${product.image}" alt="${product.name}" style="width:80px; height:80px; object-fit:cover; border-radius:10px;">
+                    </div>
                     <div class="product-info">
                         <h3>${product.name}</h3>
                         <p>${product.desc}</p>
