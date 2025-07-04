@@ -427,14 +427,14 @@
             // Hide all tab contents
             const tabs = document.querySelectorAll('.tab-content');
             tabs.forEach(tab => tab.classList.remove('active'));
-            
+
             // Show selected tab
             document.getElementById(tabId).classList.add('active');
-            
+
             // Update navigation
             const navItems = document.querySelectorAll('.nav-item');
             navItems.forEach(item => item.classList.remove('active'));
-            navItem.classList.add('active');
+            if (navItem) navItem.classList.add('active');
         }
 
         // AR functionality
@@ -569,10 +569,26 @@
             }
         }
 
-        // Initialize canvas and products when page loads
+        // Initialize canvas, products, and attach nav event listeners when page loads
         document.addEventListener('DOMContentLoaded', function() {
             initCanvas();
             renderProducts();
+
+            // Explicitly attach event listeners to nav items
+            const navItems = document.querySelectorAll('.bottom-nav .nav-item');
+            const tabIds = ['ar-tab', 'sketch-tab', 'products-tab', 'maps-tab'];
+            navItems.forEach((item, idx) => {
+                // Remove any existing listener by cloning
+                const newItem = item.cloneNode(true);
+                item.parentNode.replaceChild(newItem, item);
+            });
+            // Re-select navItems after cloning
+            const navItemsUpdated = document.querySelectorAll('.bottom-nav .nav-item');
+            navItemsUpdated.forEach((item, idx) => {
+                item.addEventListener('click', function() {
+                    showTab(tabIds[idx], item);
+                });
+            });
         });
 
         // Handle window resize
